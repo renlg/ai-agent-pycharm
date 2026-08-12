@@ -16,6 +16,9 @@ repositories {
 intellij {
     version = '2024.1'
     type = 'IC'
+    // Keep the IntelliJ Community SDK (and its Java plugin) on the compile classpath.
+    // Java APIs must remain optional and runtime-guarded because the packaged plugin
+    // also runs in IDEs such as PyCharm where com.intellij.modules.java is absent.
     plugins = ['org.jetbrains.plugins.terminal', 'java']
     downloadSources = false
 }

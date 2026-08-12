@@ -29,6 +29,12 @@
 2. 打开 IntelliJ IDEA：`Settings → Plugins → ⚙️ → Install Plugin from Disk...`
 3. 选择下载的 zip 文件，重启 IDE
 
+## 🐍 PyCharm 兼容性
+
+太微可安装并运行于 PyCharm，以及其他未内置 Java 插件（`com.intellij.modules.java`）的 JetBrains IDE。聊天、通用代码工具、长期记忆、图片生成和内联补全等核心功能可正常使用。
+
+在未安装 Java 插件的 IDE 中，依赖 Java PSI 的符号搜索（类 / 方法 / 字段查找、引用搜索和跳转定义）以及内联补全中的 Java 结构化上下文会自动禁用；内联补全仍会使用通用文本上下文，不影响 Python 等语言。
+
 ## ⚙️ 配置
 
 `Settings → Tools → 太微`：
@@ -45,7 +51,7 @@
 
 - **语言**：Java 17 + Kotlin
 - **构建**：Gradle + `org.jetbrains.intellij` 插件
-- **平台**：IntelliJ IDEA Community / Ultimate（sinceBuild `241`，兼容至 `261.*`）
+- **平台**：IntelliJ IDEA Community / Ultimate、PyCharm 及其他兼容的 JetBrains IDE（sinceBuild `241`，兼容至 `261.*`）
 - **依赖**：OkHttp（SSE 流式）、Gson、Velocity（提示词模板）、jtokkit（Token 计数）、SQLite FTS5
 
 ## 🔨 本地构建

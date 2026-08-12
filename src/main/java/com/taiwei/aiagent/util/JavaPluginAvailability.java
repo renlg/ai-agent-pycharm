@@ -10,8 +10,11 @@ public final class JavaPluginAvailability {
     static {
         boolean available;
         try {
-            available = PluginManagerCore.getPlugin(PluginId.getId("com.intellij.java")) != null;
-        } catch (Exception e) {
+            var javaPlugin = PluginManagerCore.getPlugin(PluginId.getId("com.intellij.java"));
+            available = javaPlugin != null && javaPlugin.isEnabled();
+        } catch (Throwable e) {
+            // Availability checks must never prevent the base plugin from loading in a
+            // non-Java IDE (for example PyCharm).
             available = false;
         }
         AVAILABLE = available;

@@ -1,4 +1,4 @@
-<idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
+<idea-plugin>
     <id>com.taiwei.ai-agent</id>
     <name>太微</name>
     <vendor email="support@example.com" url="https://github.com/example/ai-agent">taiwei</vendor>
@@ -11,6 +11,7 @@
     <depends>com.intellij.modules.platform</depends>
     <depends>org.jetbrains.plugins.terminal</depends>
     <depends optional="true" config-file="taiwei-java.xml">com.intellij.modules.java</depends>
+    <depends optional="true" config-file="taiwei-vcs.xml">com.intellij.modules.vcs</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- 注册右侧工具窗口 -->
@@ -73,7 +74,4 @@
         <!-- Inline Action：选中文本后显示浮动操作栏 -->
         <editorFactoryListener implementation="com.taiwei.aiagent.completion.InlineActionProvider"/>
     </extensions>
-
-    <!-- VCS 可选功能：提交页面生成提交信息按钮 -->
-    <xi:include href="/META-INF/taiwei-vcs.xml"/>
 </idea-plugin>
