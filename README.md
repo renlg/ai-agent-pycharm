@@ -33,7 +33,14 @@
 
 太微可安装并运行于 PyCharm，以及其他未内置 Java 插件（`com.intellij.modules.java`）的 JetBrains IDE。聊天、通用代码工具、长期记忆、图片生成和内联补全等核心功能可正常使用。
 
-在未安装 Java 插件的 IDE 中，依赖 Java PSI 的符号搜索（类 / 方法 / 字段查找、引用搜索和跳转定义）以及内联补全中的 Java 结构化上下文会自动禁用；内联补全仍会使用通用文本上下文，不影响 Python 等语言。
+PyCharm 版针对 Python 开发提供了额外优化：
+
+- 内联补全会读取 Python import、嵌套类/函数签名及 docstring，使模型更准确地理解当前作用域。
+- 补全提示会遵循 Python 缩进、项目现有类型标注习惯和 PEP 8 风格。
+- “生成单元测试”会识别项目中的 pytest/unittest、fixture、异步测试及 mock 约定，并生成正确的 Python 测试文件。
+- “生成文档注释”会生成符合项目风格的 Python docstring，而不是套用 Javadoc/KDoc 约定。
+
+所有 Python PSI 能力均在运行时探测并通过反射调用；没有安装 Python 插件时会安全回退到通用文本上下文。在未安装 Java 插件的 IDE 中，依赖 Java PSI 的符号搜索及 Java 结构化补全上下文也会自动禁用。
 
 ## ⚙️ 配置
 

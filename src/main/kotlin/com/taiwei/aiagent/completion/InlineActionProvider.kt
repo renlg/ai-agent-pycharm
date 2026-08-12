@@ -79,7 +79,7 @@ class InlineActionProvider : EditorFactoryListener {
         return when (ext) {
             "java" -> "java"
             "kt", "kts" -> "kotlin"
-            "py" -> "python"
+            "py", "pyi" -> "python"
             "js", "mjs" -> "javascript"
             "ts", "tsx" -> "typescript"
             "go" -> "go"

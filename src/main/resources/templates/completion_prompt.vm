@@ -1,1 +1,3 @@
-<PRE> ${languageContext}${prefix}<SUF> ${suffix}<MID>
+${languageContext}Complete the code at <MID>. Return only the missing code, with no Markdown fences or explanation.
+Respect the surrounding language, APIs, naming, and formatting. For Python, preserve syntactically significant indentation, prefer project-consistent type hints and idioms, and follow PEP 8 unless nearby code establishes another style.
+<PRE> ${prefix}<SUF> ${suffix}<MID>

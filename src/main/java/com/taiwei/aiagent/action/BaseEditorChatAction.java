@@ -109,7 +109,7 @@ public abstract class BaseEditorChatAction extends AnAction {
         return switch (ext) {
             case "java" -> "java";
             case "kt", "kts" -> "kotlin";
-            case "py" -> "python";
+            case "py", "pyi" -> "python";
             case "js", "mjs" -> "javascript";
             case "ts", "tsx" -> "typescript";
             case "go" -> "go";

@@ -22,6 +22,8 @@ import com.intellij.psi.PsiMethod
 import com.intellij.psi.util.PsiTreeUtil
 import com.taiwei.aiagent.settings.AiAgentSettings
 import com.taiwei.aiagent.util.JavaPluginAvailability
+import com.taiwei.aiagent.util.PythonPluginAvailability
+import com.taiwei.aiagent.util.ReflectivePythonPsi
 import kotlinx.coroutines.flow.flowOf
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -61,7 +63,7 @@ class InlineCompletionProvider : DebouncedInlineCompletionProvider() {
 
         private val EXT_LANGUAGE_MAP = mapOf(
             "java" to "Java", "kt" to "Kotlin", "kts" to "Kotlin",
-            "py" to "Python", "js" to "JavaScript", "ts" to "TypeScript",
+            "py" to "Python", "pyi" to "Python", "js" to "JavaScript", "ts" to "TypeScript",
             "jsx" to "JSX", "tsx" to "TSX",
             "go" to "Go", "rs" to "Rust", "rb" to "Ruby",
             "php" to "PHP", "cs" to "C#", "cpp" to "C++", "c" to "C",
@@ -123,7 +125,7 @@ class InlineCompletionProvider : DebouncedInlineCompletionProvider() {
         }
 
         val language = detectLanguage(editor)
-        val languageContext = if (language.isNotEmpty()) "[$language] " else ""
+        val languageContext = if (language.isNotEmpty()) "Language: $language\n" else ""
 
         val psiContext = buildPsiContext(editor, offset)
         val smartPrefix = psiContext + smartTruncatePrefix(rawPrefix, MAX_CONTEXT_CHARS)
@@ -160,7 +162,7 @@ class InlineCompletionProvider : DebouncedInlineCompletionProvider() {
     // ==================== 2. PSI 上下文提取 ====================
 
     /**
-     * Extract imports, enclosing class signature, and enclosing method signature at the cursor
+     * Extract imports plus enclosing class/function signatures at the cursor
      * to provide the LLM with structural context beyond the raw character window.
      * Runs in a ReadAction so it is safe to call from any thread.
      */
@@ -173,6 +175,9 @@ class InlineCompletionProvider : DebouncedInlineCompletionProvider() {
 
                 val sb = StringBuilder()
                 val isJavaPluginAvailable = JavaPluginAvailability.isJavaPluginAvailable()
+                val isPythonFile = PythonPluginAvailability.isPythonPluginAvailable() &&
+                    ReflectivePythonPsi.isPythonFile(psiFile)
+                val element = psiFile.findElementAt(minOf(offset, psiFile.textLength - 1).coerceAtLeast(0))
 
                 // Collect import statements (Java)
                 if (isJavaPluginAvailable && psiFile is PsiJavaFile) {
@@ -181,6 +186,15 @@ class InlineCompletionProvider : DebouncedInlineCompletionProvider() {
                         importList.allImportStatements.forEach { sb.append(it.text).append("\n") }
                         sb.append("\n")
                     }
+                }
+
+                // Python types remain optional: the helper performs all Python PSI access
+                // through guarded runtime reflection.
+                if (isPythonFile) {
+                    if (element != null) {
+                        sb.append(ReflectivePythonPsi.buildContext(element))
+                    }
+                    return@compute sb.toString()
                 }
 
                 // Collect imports for other file types by scanning leading lines (Kotlin, etc.)
@@ -194,8 +208,7 @@ class InlineCompletionProvider : DebouncedInlineCompletionProvider() {
                     }
                 }
 
-                // Find enclosing PSI elements at the cursor
-                val element = psiFile.findElementAt(minOf(offset, psiFile.textLength - 1).coerceAtLeast(0))
+                // Find enclosing Java PSI elements at the cursor
                 if (isJavaPluginAvailable && element != null) {
                     val enclosingClass = PsiTreeUtil.getParentOfType(element, PsiClass::class.java)
                     val enclosingMethod = PsiTreeUtil.getParentOfType(element, PsiMethod::class.java)
