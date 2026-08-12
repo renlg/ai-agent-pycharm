@@ -1,0 +1,112 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.22'
+    id 'org.jetbrains.intellij' version '1.17.4'
+}
+
+group = 'com.taiwei'
+version = '1.0.0'
+
+repositories {
+    maven { url 'https://maven.aliyun.com/repository/public' }
+    maven { url 'https://maven.aliyun.com/repository/central' }
+    mavenCentral()
+}
+
+intellij {
+    version = '2024.1'
+    type = 'IC'
+    plugins = ['org.jetbrains.plugins.terminal', 'java']
+    downloadSources = false
+}
+
+tasks {
+    runIde {
+        // 复用已运行的沙箱 IDE，不启动新实例
+        autoReloadPlugins.set(false)
+        
+        // 启动时自动打开当前项目，避免每次都选项目
+        args = [project.rootDir.absolutePath]
+        
+        // 动态检测架构，Apple Silicon → aarch64，Intel → x64
+        // 防止 Gradle Daemon 在 Rosetta 下误下载 x64 版本
+        def osArch = System.getProperty("os.arch").toLowerCase()
+        jbrArch.set(osArch.contains("aarch64") || osArch.contains("arm64") ? "aarch64" : "x64")
+        
+        // 使用固定的沙箱配置目录，避免 clean 后配置丢失
+        // 必须通过 task 属性设置（而非 systemProperty），因为插件的 LaunchSystemArgumentProvider
+        // 会以 JVM 命令行参数形式追加默认路径，systemProperty 设置的值会被覆盖
+        def sandboxHome = System.getProperty("user.home") + '/.taiwei-ide-sandbox'
+        configDir.set(file("${sandboxHome}/config"))
+        systemDir.set(file("${sandboxHome}/system"))
+        
+        // 使用系统 JDK 运行沙箱，避免中文乱码和图标显示问题
+        jvmArgs += [
+            '-Dfile.encoding=UTF-8',
+            '-Dsun.jnu.encoding=UTF-8',
+            '-Dsun.java2d.renderer=sun.java2d.pisces.PiscesRenderingEngine',
+            '-Dawt.useSystemAAFontSettings=lcd',
+            '-Dswing.aatext=true'
+        ]
+    }
+
+    prepareSandbox {
+        // 将插件输出到固定沙箱目录，避免 clean 后配置丢失
+        // runIde 的 pluginsDir 会自动跟随 prepareSandbox 的 destinationDir
+        defaultDestinationDir.set(file("${System.getProperty("user.home")}/.taiwei-ide-sandbox/plugins"))
+    }
+
+    // 禁用 instrumentCode 任务以避免 JDK 路径问题
+    instrumentCode {
+        enabled = false
+    }
+
+    patchPluginXml {
+        sinceBuild.set('241')
+        untilBuild.set('261.*')
+    }
+
+    signPlugin {
+        certificateChain.set(System.getenv('CERTIFICATE_CHAIN'))
+        privateKey.set(System.getenv('PRIVATE_KEY'))
+        password.set(System.getenv('PRIVATE_KEY_PASSWORD'))
+    }
+
+    publishPlugin {
+        token.set(System.getenv('PUBLISH_TOKEN'))
+    }
+}
+
+dependencies {
+    // HTTP 客户端（用于调用 LLM API）
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'com.squareup.okhttp3:okhttp-sse:4.12.0'
+
+    // JSON 处理
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    // 阿里云 IQS 网络搜索 SDK（可选，仅在选择"阿里云 IQS"搜索引擎时使用，默认使用 DuckDuckGo 免费搜索）
+    implementation 'com.aliyun:iqs20241111:1.7.2'
+
+    // Velocity 模板引擎
+    implementation 'org.apache.velocity:velocity-engine-core:2.3'
+
+    // Tiktoken Token 计数（jtokkit 是 OpenAI tiktoken 的 Java 实现）
+    implementation 'com.knuddels:jtokkit:1.1.0'
+
+    // SQLite JDBC 驱动（长期记忆本地存储，纯本地无云端）
+    implementation 'org.xerial:sqlite-jdbc:3.45.3.0'
+
+    testImplementation platform('org.junit:junit-bom:5.10.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}

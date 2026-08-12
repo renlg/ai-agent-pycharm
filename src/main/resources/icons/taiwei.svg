@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="13" height="13">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- 天线 -->
+  <line x1="8" y1="1" x2="8" y2="3" stroke="url(#grad)" stroke-width="1" stroke-linecap="round"/>
+  <circle cx="8" cy="1" r="0.7" fill="url(#grad)"/>
+  <!-- 头部 -->
+  <rect x="3" y="3" width="10" height="7" rx="2" fill="url(#grad)"/>
+  <!-- 眼睛 -->
+  <circle cx="5.8" cy="6.2" r="1.2" fill="white"/>
+  <circle cx="10.2" cy="6.2" r="1.2" fill="white"/>
+  <circle cx="6" cy="6.2" r="0.5" fill="#1e1b4b"/>
+  <circle cx="10.4" cy="6.2" r="0.5" fill="#1e1b4b"/>
+  <!-- 嘴巴 -->
+  <rect x="6" y="8" width="4" height="0.8" rx="0.4" fill="white" opacity="0.8"/>
+  <!-- 身体 -->
+  <rect x="4" y="11" width="8" height="4" rx="1.5" fill="url(#grad)" opacity="0.85"/>
+  <!-- 身体装饰 -->
+  <circle cx="8" cy="13" r="0.8" fill="white" opacity="0.5"/>
+</svg>

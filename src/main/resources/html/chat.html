@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>太微 AI</title>
+    <style>__CSS__</style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="top-bar" id="topBar">
+            <div class="tab-scroll">
+                <div class="tab-list" id="tabList"></div>
+            </div>
+            <div class="top-actions">
+                <button class="top-btn" id="newSessionBtn" title="新建会话">+ 新建</button>
+                <button class="top-btn" id="settingsBtn" title="设置">⚙ 设置</button>
+            </div>
+        </div>
+        <div class="settings-dropdown" id="settingsDropdown">
+            <div class="settings-dropdown-menu" id="settingsDropdownMenu">
+                <div class="settings-item" id="skillManagerItem">
+                    <span>🗂 Skill 管理</span>
+                    <span class="skills-badge" id="skillsBadge">0</span>
+                </div>
+                <div class="settings-item" id="memoryManagerItem">
+                    <span>🧠 Memory 管理</span>
+                    <span class="skills-badge" id="memoryBadge">0</span>
+                </div>
+                <div class="settings-item" id="mcpSettingsItem">
+                    <span>🔌 MCP 配置</span>
+                </div>
+                <div class="settings-item" id="toolManagerItem">
+                    <span>🔧 工具管理</span>
+                </div>
+            </div>
+        </div>
+        <div class="messages-area" id="messagesArea">
+            <div class="welcome" id="welcomeScreen">
+                <div class="welcome-icon">&#x1f916;</div>
+                <h2>&#x592a;&#x5fae; AI &#x52a9;&#x624b;</h2>
+                <p>&#x4f60;&#x597d;&#xff0c;&#x6211;&#x662f;&#x4f60;&#x7684; AI &#x7f16;&#x7a0b;&#x52a9;&#x624b;&#x3002;&#x8f93;&#x5165;&#x95ee;&#x9898;&#x5f00;&#x59cb;&#x5bf9;&#x8bdd;&#xff0c;&#x6211;&#x53ef;&#x4ee5;&#x5e2e;&#x4f60;&#x7f16;&#x5199;&#x4ee3;&#x7801;&#x3001;&#x5206;&#x6790;&#x95ee;&#x9898;&#x3001;&#x6267;&#x884c;&#x547d;&#x4ee4;&#x3002;</p>
+            </div>
+        </div>
+        <div class="input-area">
+            <div class="input-wrapper">
+                <div class="mode-dropdown" id="modeDropdown">
+                    <div class="mode-dropdown-trigger" id="modeDropdownTrigger" title="切换模式">
+                        <span class="mode-dropdown-label" id="modeDropdownLabel">Build</span>
+                        <span class="mode-dropdown-arrow">&#x25BE;</span>
+                    </div>
+                    <div class="mode-dropdown-menu" id="modeDropdownMenu"></div>
+                </div>
+                <div class="model-dropdown" id="modelDropdown">
+                    <div class="model-dropdown-trigger" id="modelSelectTrigger" title="切换模型">
+                        <span class="model-dropdown-label" id="modelDropdownLabel">选择模型</span>
+                        <span class="model-dropdown-arrow">&#x25BE;</span>
+                    </div>
+                    <div class="model-dropdown-menu" id="modelDropdownMenu"></div>
+                </div>
+                <div class="image-preview-area" id="imagePreviewArea"></div>
+                <textarea id="messageInput"
+                          placeholder="&#x8f93;&#x5165;&#x6d88;&#x606f;&#xff0c;Enter &#x53d1;&#x9001;&#xff0c;Shift+Enter &#x6362;&#x884c;..."
+                          rows="4"></textarea>
+                <button class="send-btn" id="sendBtn" title="&#x53d1;&#x9001; (Enter)">&#x27A4;</button>
+            </div>
+            <div class="mention-dropdown" id="mentionDropdown" style="display:none;"></div>
+        </div>
+    </div>
+
+    <script>
+        window.__TAIW_THEME__ = '__THEME__';
+    </script>
+    <script>__MARKDOWN_JS__</script>
+    <script>__CHAT_JS__</script>
+</body>
+</html>

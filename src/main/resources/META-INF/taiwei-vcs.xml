@@ -1,0 +1,12 @@
+<idea-plugin>
+    <!-- VCS 可选功能：仅当 IDE 启用了 VCS 模块时加载 -->
+    <actions>
+        <action id="Taiwei.GenerateCommitMessage"
+                class="com.taiwei.aiagent.action.GenerateCommitMessageAction"
+                text="太微：生成提交信息"
+                description="根据当前 git diff 让太微生成 Conventional Commits 风格的提交信息"
+                icon="/icons/taiwei.svg">
+            <add-to-group group-id="Vcs.MessageActionGroup" anchor="first"/>
+        </action>
+    </actions>
+</idea-plugin>

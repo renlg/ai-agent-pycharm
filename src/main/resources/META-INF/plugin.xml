@@ -1,0 +1,79 @@
+<idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
+    <id>com.taiwei.ai-agent</id>
+    <name>太微</name>
+    <vendor email="support@example.com" url="https://github.com/example/ai-agent">taiwei</vendor>
+
+    <description><![CDATA[
+        太微 - AI 编程助手 IntelliJ IDEA 插件。<br>
+        一个智能助手插件，帮助开发者更高效地编写代码。
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>org.jetbrains.plugins.terminal</depends>
+    <depends optional="true" config-file="taiwei-java.xml">com.intellij.modules.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- 注册右侧工具窗口 -->
+        <toolWindow id="太微"
+                    anchor="right"
+                    factoryClass="com.taiwei.aiagent.window.ChatWindowFactory"
+                    icon="/icons/taiwei.svg"/>
+
+        <!-- 注册浏览器工具窗口 -->
+        <toolWindow id="浏览器"
+                    anchor="bottom"
+                    factoryClass="com.taiwei.aiagent.browser.BrowserToolWindowFactory"
+                    icon="/icons/browser.svg"/>
+
+        <!-- 注册配置服务 -->
+        <applicationService serviceImplementation="com.taiwei.aiagent.settings.AiAgentSettings"/>
+        <applicationService serviceImplementation="com.taiwei.aiagent.settings.IqsSettings"/>
+        <applicationService serviceImplementation="com.taiwei.aiagent.settings.ImageGenSettings"/>
+
+        <!-- 注册 Settings 配置页面（Tools → 太微 → 模型 / 终端 / 网络搜索） -->
+        <applicationConfigurable parentId="tools"
+                                 instance="com.taiwei.aiagent.settings.TaiweiParentConfigurable"
+                                 id="com.taiwei.aiagent.settings"
+                                 key="taiwei.parent.title"
+                                 bundle="messages"/>
+        <applicationConfigurable parentId="com.taiwei.aiagent.settings"
+                                 instance="com.taiwei.aiagent.settings.ModelConfigurable"
+                                 id="com.taiwei.aiagent.settings.model"/>
+        <applicationConfigurable parentId="com.taiwei.aiagent.settings"
+                                 instance="com.taiwei.aiagent.settings.TerminalConfigurable"
+                                 id="com.taiwei.aiagent.settings.terminal"/>
+        <applicationConfigurable parentId="com.taiwei.aiagent.settings"
+                                 instance="com.taiwei.aiagent.settings.IqsConfigurable"
+                                 id="com.taiwei.aiagent.settings.iqs"
+                                 key="iqs.title"
+                                 bundle="messages"/>
+        <applicationConfigurable parentId="com.taiwei.aiagent.settings"
+                                 instance="com.taiwei.aiagent.settings.McpConfigurable"
+                                 id="com.taiwei.aiagent.settings.mcp"/>
+        <applicationConfigurable parentId="com.taiwei.aiagent.settings"
+                                 instance="com.taiwei.aiagent.settings.RulesConfigurable"
+                                 id="com.taiwei.aiagent.settings.rules"/>
+        <applicationConfigurable parentId="com.taiwei.aiagent.settings"
+                                 instance="com.taiwei.aiagent.settings.ImageGenConfigurable"
+                                 id="com.taiwei.aiagent.settings.imagegen"/>
+
+        <!-- Diff 模块：AI 改动的代码变更追踪与审查系统 -->
+        <projectService serviceImplementation="com.taiwei.aiagent.diff.DiffReviewService"/>
+        <projectService serviceImplementation="com.taiwei.aiagent.skill.SkillManager"/>
+        <projectService serviceImplementation="com.taiwei.aiagent.memory.MemoryManager"/>
+        <projectService serviceImplementation="com.taiwei.aiagent.mcp.McpManager"/>
+        <projectService serviceImplementation="com.taiwei.aiagent.agent.AgentService"/>
+        <projectService serviceImplementation="com.taiwei.aiagent.browser.BrowserToolService"/>
+        <projectService serviceImplementation="com.taiwei.aiagent.ui.EditorChatBridge"/>
+        <editorNotificationProvider implementation="com.taiwei.aiagent.diff.DiffEditorNotificationProvider"/>
+
+        <!-- Tab 自动补全 -->
+        <codeInsight.inlineCompletionProvider implementation="com.taiwei.aiagent.completion.InlineCompletionProvider"/>
+
+        <!-- Inline Action：选中文本后显示浮动操作栏 -->
+        <editorFactoryListener implementation="com.taiwei.aiagent.completion.InlineActionProvider"/>
+    </extensions>
+
+    <!-- VCS 可选功能：提交页面生成提交信息按钮 -->
+    <xi:include href="/META-INF/taiwei-vcs.xml"/>
+</idea-plugin>
